@@ -1,0 +1,33 @@
+.code ul
+{
+   display: table;
+   list-style-type: none;
+}
+
+.code ul li
+{
+   display: table-row;
+   height: 2em;
+}
+
+.code_gutter
+{
+   font-family: 'century gothic', sans-serif;
+   font-size: 90%;
+   display: table-cell;
+   width: 3em;
+   height: 100%;
+   padding-right: 0.5em;
+   padding-top: 0.25em;
+   text-align: right;
+   background-color: #faf2c3;
+}
+
+.code_line
+{
+   font-family: monospace;
+   font-size: 110%;
+   display: table-cell;
+   padding-left: 1em;
+}
+

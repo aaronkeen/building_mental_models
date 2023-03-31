@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+   <meta charset="utf-8"/>
+   <title>Building Mental Models - Tracing Statement Sequences</title>
+   <link media="screen" type="text/css" href="../css/mental.css" rel="StyleSheet"/>
+</head>
+
+<body>
+   <h1>Tracing Statement Sequences</h1>
+
+   <h2>Statements</h2>
+
+<p>
+   It is common across a variety of programming languages and programming
+styles to structure code as a sequence of what one might consider to be
+commands or actions to perform. In the context of the study of programming
+languages, and in Python, such commands are included in a category of
+language constructs called <em>statements</em>. A given programming language
+may define many different statements (Python defines more than 20, but
+only a core set is covered in this text) to associate values with names,
+to take different actions based on values, to repeat actions based on
+values, and more. These values used within such statements are, of course,
+determined by evaluating expressions. In one view of programming, a programmer
+combines statements (and the expressions within) to build a program as a
+series of actions.
+</p>
+
+   <h2>Assignment Statement</h2>
+<p>
+Consider evaluating the  expression <code>a*a + b*b</code>. Given Python's
+operator precedence rules and our explicit steps of evaluation,
+the evaluation of this expression requires evaluating the left operand
+(<code>a*a</code>) of the addition before evaluating the right operand.
+This, in turn, requires evaluating the left operand of that nested
+multiplication, which is the identifier <code>a</code>. In each of the
+earlier expression evaluation examples the value of an identifier was
+given as part of the problem statement (e.g., <quote>"evaluate the
+following expression with the assumption that <code>a</code> has the
+value 3"</quote>). As we transition to tracing the execution of programs
+no such assumptions will be stated
+<sup><a id="footnote-1-home" href="#footnote-1">1</a></sup>.
+Instead, the code itself will need to determine and associate a value with
+each identifier.
+</p>
+
+<p>
+An assignment statement can be used to <em>bind</em> a value to an identifier
+(sometimes phrased as naming a value, giving a value a name, or assigning
+a value to a variable). This is written as in the example that follows,
+where an identifer (name) is
+specified to the left of an <code>=</code> symbol
+<sup><a id="footnote-2-home" href="#footnote-2">2</a></sup> and an
+expression to determine the value is given to the right of the
+<code>=</code> symbol. In this specific example, the expression is
+evaluated to the value <code>5</code> and that value is bound to the
+identifier <code>a</code>.
+</p>
+
+<blockquote>
+<p>
+<code>a = 3 + 2</code>
+</p>
+</blockquote>
+
+<p>
+Assignment statements are used to great effect to improve code readability
+by giving meaningful names to computed value, to avoid repeated evaluation
+of the same expression when its resulting value is to be used more than
+once, and to break larges expressions into smaller pieces. Such uses commonly
+lead to a sequence of statements as in the following example (with each
+statement now numbered for reference).
+</p>
+
+<blockquote class="code">
+<ul>
+<li><span class="code_gutter">1</span><span class="code_line">x1 = 2</span></li>
+<li><span class="code_gutter">2</span><span class="code_line">y1 = 4</span></li>
+<li><span class="code_gutter">3</span><span class="code_line">x2 = 10</span></li>
+<li><span class="code_gutter">4</span><span class="code_line">y2 = 7</span></li>
+<li><span class="code_gutter">5</span><span class="code_line">delta_x = x2 - x1</span></li>
+<li><span class="code_gutter">6</span><span class="code_line">delta_y = y2 - y1</span></li>
+<li><span class="code_gutter">7</span><span class="code_line">distance_squared = delta_x*delta_x + delta_y*delta_y</span></li>
+</ul>
+</blockquote>
+
+<p>
+   Evaluating this code will require evaluating multiple expressions (such
+as <code>x2 - x1</code>) that include the use of identifiers. Furthermore,
+the later lines of code rely on the evaluation of the earlier lines of code
+to determine the values associated with the identifers used. More specifically,
+the evaluation of the expression in the assignment statement on line 7
+(i.e., the expression <code>delta_x*delta_x + delta_y*delta_y</code>)
+requires that the values associated with identifiers <code>delta_x</code> and
+<code>delta_y</code> be
+known; these identifiers are assigned values on lines 5 and 6.
+</p>
+
+   <h3>Sequencing</h3>
+<p>
+   Evaluation of a sequence of statements begins at the first and continues
+through the last. In the example above, the assignment statement on line
+1 will evaluate before that on line 2, which evaluates before line 3, and
+so on. This "flow of control" from the first statement (top) to the last
+statement (bottom) is important to the proper evaluation of a sequence of
+statements (i.e., evaluation proceeds from top to bottom or from first to
+last). This "flow" is illustrated in the trace tables below.
+</p>
+
+<p>
+Later sections will introduce statements that augment this standard flow
+of control, but they are best viewed as modifications of the standard
+flow of control.
+</p>
+
+
+   <h2>Trace Tables</h2>
+<p>
+   Evaluating a sequence of assignment statements is done by evaluating
+each assignment statement in turn, from top to bottom. The evaluation of an
+assignment statement requires evaluating the expression within to determine
+the value
+to bind to the specified identifier (to the left of the <code>=</code>
+symbol).  Of course, evaluating such an expression will often require using
+the known <em>identifier bindings</em> (identifier/variable names and their
+associated values) to determine the values of the identifiers used within
+the expression.  This can be a lot to track, so our analysis will benefit
+from some structure. This section introduces trace tables to structure our
+reasoning of the evaluation of statement sequences. At present such
+sequences will include only assignment statements, but later chapters will
+extend the use of these trace tables to more advanced programs.
+</p>
+
+
+....
+
+<blockquote class="code">
+<ul>
+<li><span class="code_gutter">1</span><span class="code_line">x1 = 2</span></li>
+<li><span class="code_gutter">2</span><span class="code_line">y1 = 4</span></li>
+<li><span class="code_gutter">3</span><span class="code_line">x2 = 10</span></li>
+<li><span class="code_gutter">4</span><span class="code_line">y2 = 7</span></li>
+<li><span class="code_gutter">5</span><span class="code_line">delta_x = x2 - x1</span></li>
+<li><span class="code_gutter">6</span><span class="code_line">delta_y = y2 - y1</span></li>
+<li><span class="code_gutter">7</span><span class="code_line">distance_squared = delta_x*delta_x + delta_y*delta_y</span></li>
+</ul>
+</blockquote>
+
+....
+
+
+</body>
+
+<footer>
+<p id="footnote-1">1. There are cases where one might trace code in a
+   more general/abstract manner (such as when developing test cases,
+   when debugging, when reading function definition in isolation, or
+   when considering user input) but our goal at present is to consider
+   self-contained code.
+   <a href="#footnote-1-home" title="return to text">&#8617;</a>
+</p>
+<p id="footnote-2">2. The use of the <code>=</code> symbol for assignment 
+   is an unfortunate choice.  Those new to programming often read this as
+   a declaration of (or check for) equality, as one might expect from
+   mathematics, but this is not the behavior of an assignment statement,
+   as will be illustrated.
+   <a href="#footnote-2-home" title="return to text">&#8617;</a>
+</p>
+</footer>
+</html>
