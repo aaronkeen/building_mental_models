@@ -132,8 +132,17 @@ extend the use of these trace tables to more advanced programs.
 </p>
 
 
-....
+<h3>Beginning</h3>
 
+<p>
+We begin tracing with a table that includes one row per line in the program under evaluation. These
+rows, from top to bottom, represent the flow of control through the evaluation of the statement
+sequence. Each row will be updated to include any bindings established by the statement on the
+corresponding line. Prior to evaluating the first line of code, the set of Known Bindings is
+empty<sup><a id="footnote-3-home" href="#footnote-3">3</a></sup>.
+</p>
+
+<div class="trace">
 <blockquote class="code">
 <ul>
 <li><span class="code_gutter">1</span><span class="code_line">x1 = 2</span></li>
@@ -145,8 +154,300 @@ extend the use of these trace tables to more advanced programs.
 <li><span class="code_gutter">7</span><span class="code_line">distance_squared = delta_x*delta_x + delta_y*delta_y</span></li>
 </ul>
 </blockquote>
+<table>
+<caption>Initial Code</caption>
+<thead>
+<th>Line</th>
+<th>Known Bindings</th>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td></td>
+</tr>
+<tr>
+<td>5</td>
+<td></td>
+</tr>
+<tr>
+<td>6</td>
+<td></td>
+</tr>
+<tr>
+<td>7</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
 
-....
+<h3>Step One</h3>
+
+<p>
+Evaluation of the statement on Line 1 binds the value <code>2</code> to <code>x1</code> which
+is reflected in the trace table as an entry for Line 1. As written, this appears as a simple
+duplicate of the line of code in the program, but this is only because that line is an assignment
+of an integer literal (<code>2</code>) to an identifier. More generally, each binding is an
+association between an identifier and a value.
+</p>
+
+<div class="trace">
+<blockquote class="code">
+<ul>
+<li><span class="code_gutter">1</span><span class="code_line">x1 = 2</span></li>
+<li><span class="code_gutter">2</span><span class="code_line">y1 = 4</span></li>
+<li><span class="code_gutter">3</span><span class="code_line">x2 = 10</span></li>
+<li><span class="code_gutter">4</span><span class="code_line">y2 = 7</span></li>
+<li><span class="code_gutter">5</span><span class="code_line">delta_x = x2 - x1</span></li>
+<li><span class="code_gutter">6</span><span class="code_line">delta_y = y2 - y1</span></li>
+<li><span class="code_gutter">7</span><span class="code_line">distance_squared = delta_x*delta_x + delta_y*delta_y</span></li>
+</ul>
+</blockquote>
+<table>
+<caption>Initial Code</caption>
+<thead>
+<th>Line</th>
+<th>Known Bindings</th>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>x1 = 2</td>
+</tr>
+<tr>
+<td>2</td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td></td>
+</tr>
+<tr>
+<td>5</td>
+<td></td>
+</tr>
+<tr>
+<td>6</td>
+<td></td>
+</tr>
+<tr>
+<td>7</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>
+   You should complete the table for the evaluation of Lines 2 through 4 before moving on.
+</p>
+
+<h3>Steps Two Through Four</h3>
+
+<p>
+Lines 2 through 4 are similarly structured assignment statements (wherein the expression is a
+literal value), so the introduction of new bindings proceeds in the same manner as for Line 1. The
+table below shows those entries.
+</p>
+
+<div class="trace">
+<blockquote class="code">
+<ul>
+<li><span class="code_gutter">1</span><span class="code_line">x1 = 2</span></li>
+<li><span class="code_gutter">2</span><span class="code_line">y1 = 4</span></li>
+<li><span class="code_gutter">3</span><span class="code_line">x2 = 10</span></li>
+<li><span class="code_gutter">4</span><span class="code_line">y2 = 7</span></li>
+<li><span class="code_gutter">5</span><span class="code_line">delta_x = x2 - x1</span></li>
+<li><span class="code_gutter">6</span><span class="code_line">delta_y = y2 - y1</span></li>
+<li><span class="code_gutter">7</span><span class="code_line">distance_squared = delta_x*delta_x + delta_y*delta_y</span></li>
+</ul>
+</blockquote>
+<table>
+<caption>Initial Code</caption>
+<thead>
+<th>Line</th>
+<th>Known Bindings</th>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>x1 = 2</td>
+</tr>
+<tr>
+<td>2</td>
+<td>y1 = 4</td>
+</tr>
+<tr>
+<td>3</td>
+<td>x2 = 10</td>
+</tr>
+<tr>
+<td>4</td>
+<td>y2 = 7</td>
+</tr>
+<tr>
+<td>5</td>
+<td></td>
+</tr>
+<tr>
+<td>6</td>
+<td></td>
+</tr>
+<tr>
+<td>7</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+<h3>Steps Five and Six</h3>
+
+<p>
+On Line 5, to evaluate the expression <code>x2 - x1</code> we must know the value bound to
+<code>x2</code> and the value bound to <code>x1</code>. The Trace Table can be used to determine
+these values based on the previously evaluated statements. To find these values, we look to the
+trace table for the row that corresponds to the line being evaluated (Line 5, here). We then
+search the table in reverse (from this row to the first row), stopping if a binding for the
+identifier we seek is found. It is this value that must be used in the expression evaluation.
+</p>
+
+<b>ADD ARROW SOMEHOW</b>
+<div class="trace">
+<blockquote class="code">
+<ul>
+<li><span class="code_gutter">1</span><span class="code_line">x1 = 2</span></li>
+<li><span class="code_gutter">2</span><span class="code_line">y1 = 4</span></li>
+<li><span class="code_gutter">3</span><span class="code_line">x2 = 10</span></li>
+<li><span class="code_gutter">4</span><span class="code_line">y2 = 7</span></li>
+<li><span class="code_gutter">5</span><span class="code_line">delta_x = x2 - x1</span></li>
+<li><span class="code_gutter">6</span><span class="code_line">delta_y = y2 - y1</span></li>
+<li><span class="code_gutter">7</span><span class="code_line">distance_squared = delta_x*delta_x + delta_y*delta_y</span></li>
+</ul>
+</blockquote>
+<table>
+<caption>Initial Code</caption>
+<thead>
+<th>Line</th>
+<th>Known Bindings</th>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>x1 = 2</td>
+</tr>
+<tr>
+<td>2</td>
+<td>y1 = 4</td>
+<td></td>
+<td>&#8593;<sup>x1?</sup></td>
+</tr>
+<tr>
+<td>3</td>
+<td>x2 = 10</td>
+<td></td>
+<td>&#8593;<sup>x1?</sup></td>
+</tr>
+<tr>
+<td>4</td>
+<td>y2 = 7</td>
+<td>&#8593;<sup>x2?</sup></td>
+<td>&#8593;<sup>x1?</sup></td>
+</tr>
+<tr>
+<td>5</td>
+<td></td>
+<td>&#8593;<sup>x2?</sup></td>
+<td>&#8593;<sup>x1?</sup></td>
+</tr>
+<tr>
+<td>6</td>
+<td></td>
+</tr>
+<tr>
+<td>7</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>
+For the evaluation of Line 5, when searching for the value of <code>x2</code>, the rows corresponding
+to Line 4 and Line 3 are examined. The binding <code>x2 = 10</code> is found, giving 10 as the value
+to use for <code>x2</code>. Similarly, when searching for the value of <code>x1</code>, the rows for
+Lines 4, 3, 2, and 1 (in this order) are examined. The binding <code>x1 = 2</code> is found, giving 2
+as the value to use for the evaluation of <code>x1</code>. With these values determined, the assignment
+on Line 5 can be evaluated and the new binding added to the table.
+</p>
+
+<div class="trace">
+<blockquote class="code">
+<ul>
+<li><span class="code_gutter">1</span><span class="code_line">x1 = 2</span></li>
+<li><span class="code_gutter">2</span><span class="code_line">y1 = 4</span></li>
+<li><span class="code_gutter">3</span><span class="code_line">x2 = 10</span></li>
+<li><span class="code_gutter">4</span><span class="code_line">y2 = 7</span></li>
+<li><span class="code_gutter">5</span><span class="code_line">delta_x = x2 - x1</span></li>
+<li><span class="code_gutter">6</span><span class="code_line">delta_y = y2 - y1</span></li>
+<li><span class="code_gutter">7</span><span class="code_line">distance_squared = delta_x*delta_x + delta_y*delta_y</span></li>
+</ul>
+</blockquote>
+<table>
+<caption>Initial Code</caption>
+<thead>
+<th>Line</th>
+<th>Known Bindings</th>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>x1 = 2</td>
+</tr>
+<tr>
+<td>2</td>
+<td>y1 = 4</td>
+</tr>
+<tr>
+<td>3</td>
+<td>x2 = 10</td>
+</tr>
+<tr>
+<td>4</td>
+<td>y2 = 7</td>
+</tr>
+<tr>
+<td>5</td>
+<td>delta_x = 8</td>
+</tr>
+<tr>
+<td>6</td>
+<td></td>
+</tr>
+<tr>
+<td>7</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
 
 
 </body>
@@ -165,6 +466,11 @@ extend the use of these trace tables to more advanced programs.
    mathematics, but this is not the behavior of an assignment statement,
    as will be illustrated.
    <a href="#footnote-2-home" title="return to text">&#8617;</a>
+</p>
+<p id="footnote-2">3. The Python runtime environment does establish some
+   initial bindings, but our focus here is on those explicitly introduced
+   by the code under evaluation.
+   <a href="#footnote-3-home" title="return to text">&#8617;</a>
 </p>
 </footer>
 </html>

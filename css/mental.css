@@ -31,3 +31,43 @@
    padding-left: 1em;
 }
 
+
+div.trace > blockquote
+{
+   float: left;
+}
+
+div.trace::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+div.trace table
+{
+   border-collapse: collapse;
+}
+
+div.trace tr
+{
+   margin-bottom: 2em;
+   height: 2em;
+}
+
+div.trace td:first-child
+{
+   font-family: 'century gothic', sans-serif;
+   font-size: 90%;
+   width: 3em;
+   height: 100%;
+   padding-right: 0.5em;
+   padding-top: 0.25em;
+   padding-left: 0em;
+   text-align: right;
+   background-color: #faf2c3;
+}
+
+div.trace td
+{
+   padding-left: 1em;
+}
