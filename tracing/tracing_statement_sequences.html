@@ -318,7 +318,7 @@ table below shows those entries.
 </div>
 
 
-<h3>Steps Five and Six</h3>
+<h3>Step Five</h3>
 
 <p>
 On Line 5, to evaluate the expression <code>x2 - x1</code> we must know the value bound to
@@ -329,7 +329,6 @@ search the table in reverse (from this row to the first row), stopping if a bind
 identifier we seek is found. It is this value that must be used in the expression evaluation.
 </p>
 
-<b>ADD ARROW SOMEHOW</b>
 <div class="trace">
 <blockquote class="code">
 <ul>
@@ -449,6 +448,130 @@ on Line 5 can be evaluated and the new binding added to the table.
 </table>
 </div>
 
+<h3>Steps Six and Seven</h3>
+
+<p>
+The same process is followed to determine the values bound to the identifiers
+used on Line 6 (<code>delta_y = y2 - y1</code>) and on Line 7
+(<code>distance_squared = delta_x*delta_x + delta_y*delta_y</code>).
+</p>
+
+<div class="trace">
+<blockquote class="code">
+<ul>
+<li><span class="code_gutter">1</span><span class="code_line">x1 = 2</span></li>
+<li><span class="code_gutter">2</span><span class="code_line">y1 = 4</span></li>
+<li><span class="code_gutter">3</span><span class="code_line">x2 = 10</span></li>
+<li><span class="code_gutter">4</span><span class="code_line">y2 = 7</span></li>
+<li><span class="code_gutter">5</span><span class="code_line">delta_x = x2 - x1</span></li>
+<li><span class="code_gutter">6</span><span class="code_line">delta_y = y2 - y1</span></li>
+<li><span class="code_gutter">7</span><span class="code_line">distance_squared = delta_x*delta_x + delta_y*delta_y</span></li>
+</ul>
+</blockquote>
+<table>
+<caption>Initial Code</caption>
+<thead>
+<th>Line</th>
+<th>Known Bindings</th>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>x1 = 2</td>
+</tr>
+<tr>
+<td>2</td>
+<td>y1 = 4</td>
+</tr>
+<tr>
+<td>3</td>
+<td>x2 = 10</td>
+<td></td>
+<td>&#8593;<sup>y1?</sup></td>
+</tr>
+<tr>
+<td>4</td>
+<td>y2 = 7</td>
+<td></td>
+<td>&#8593;<sup>y1?</sup></td>
+</tr>
+<tr>
+<td>5</td>
+<td>delta_x = 8</td>
+<td>&#8593;<sup>y2?</sup></td>
+<td>&#8593;<sup>y1?</sup></td>
+</tr>
+<tr>
+<td>6</td>
+<td>delta_y = 3</td>
+<td>&#8593;<sup>y2?</sup></td>
+<td>&#8593;<sup>y1?</sup></td>
+<td>&#8593;<sup>delta_x?</sup></td>
+</tr>
+<tr>
+<td>7</td>
+<td>distance_squared = 73</td>
+<td></td>
+<td></td>
+<td>&#8593;<sup>delta_x?</sup></td>
+<td>&#8593;<sup>delta_y?</sup></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+   <h2>Common Misconceptions and Errors</h2>
+
+<p>
+When developing programs, one will commonly read and trace code as part of
+the debugging process. We must acknowledge that it is common to make mistakes
+while programming and should leverage the tools available to aid in the
+discovery of these mistakes. Below we trace two code sequences with common
+mistakes and one with a common misconception.
+</p>
+
+   <h3>Missing Binding</h3>
+
+<p>
+In the following example, the Trace Table has been completed through Lines 1
+and 2.
+</p>
+
+<div class="trace">
+<blockquote class="code">
+<ul>
+<li><span class="code_gutter">1</span><span class="code_line">a = 2</span></li>
+<li><span class="code_gutter">2</span><span class="code_line">b = 4</span></li>
+<li><span class="code_gutter">3</span><span class="code_line">result = a * 2 + b * c</span></li>
+</ul>
+</blockquote>
+<table>
+<caption>Initial Code</caption>
+<thead>
+<th>Line</th>
+<th>Known Bindings</th>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+   <h3>Later Binding</h3>
+
+   <h3>Changing a Binding</h3>
 
 </body>
 
@@ -467,9 +590,9 @@ on Line 5 can be evaluated and the new binding added to the table.
    as will be illustrated.
    <a href="#footnote-2-home" title="return to text">&#8617;</a>
 </p>
-<p id="footnote-2">3. The Python runtime environment does establish some
-   initial bindings, but our focus here is on those explicitly introduced
-   by the code under evaluation.
+<p id="footnote-2">3. The Python runtime environment does establish an
+   initial set of bindings, but our focus here is on those explicitly
+   introduced by the code under evaluation.
    <a href="#footnote-3-home" title="return to text">&#8617;</a>
 </p>
 </footer>
