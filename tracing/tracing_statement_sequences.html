@@ -351,6 +351,8 @@ identifier we seek is found. It is this value that must be used in the expressio
 <tr>
 <td>1</td>
 <td>x1 = 2</td>
+<td/>
+<td class="found">&checkmark;</td>
 </tr>
 <tr>
 <td>2</td>
@@ -361,7 +363,7 @@ identifier we seek is found. It is this value that must be used in the expressio
 <tr>
 <td>3</td>
 <td>x2 = 10</td>
-<td></td>
+<td class="found">&checkmark;</td>
 <td>&#8593;<sup>x1?</sup></td>
 </tr>
 <tr>
@@ -482,6 +484,8 @@ used on Line 6 (<code>delta_y = y2 - y1</code>) and on Line 7
 <tr>
 <td>2</td>
 <td>y1 = 4</td>
+<td/>
+<td class="found">&checkmark;</td>
 </tr>
 <tr>
 <td>3</td>
@@ -492,7 +496,7 @@ used on Line 6 (<code>delta_y = y2 - y1</code>) and on Line 7
 <tr>
 <td>4</td>
 <td>y2 = 7</td>
-<td></td>
+<td class="found">&checkmark;</td>
 <td>&#8593;<sup>y1?</sup></td>
 </tr>
 <tr>
@@ -500,6 +504,7 @@ used on Line 6 (<code>delta_y = y2 - y1</code>) and on Line 7
 <td>delta_x = 8</td>
 <td>&#8593;<sup>y2?</sup></td>
 <td>&#8593;<sup>y1?</sup></td>
+<td class="found">&checkmark;</td>
 </tr>
 <tr>
 <td>6</td>
@@ -507,6 +512,7 @@ used on Line 6 (<code>delta_y = y2 - y1</code>) and on Line 7
 <td>&#8593;<sup>y2?</sup></td>
 <td>&#8593;<sup>y1?</sup></td>
 <td>&#8593;<sup>delta_x?</sup></td>
+<td class="found">&checkmark;</td>
 </tr>
 <tr>
 <td>7</td>
@@ -534,8 +540,11 @@ mistakes and one with a common misconception.
    <h3>Missing Binding</h3>
 
 <p>
-In the following example, the Trace Table has been completed through Lines 1
-and 2.
+In the following example, the trace table has been completed through Lines 1 
+and 2. The next step is then to evaluate the expression on Line 3. To do so,
+the values bounds to <code>a</code>, <code>b</code>, and <code>c</code> must
+be determined by searching the trace table. This search is also illustrated
+in the trace table below.
 </p>
 
 <div class="trace">
@@ -544,6 +553,141 @@ and 2.
 <li><span class="code_gutter">1</span><span class="code_line">a = 2</span></li>
 <li><span class="code_gutter">2</span><span class="code_line">b = 4</span></li>
 <li><span class="code_gutter">3</span><span class="code_line">result = a * 2 + b * c</span></li>
+</ul>
+</blockquote>
+<table>
+<caption>Initial Code</caption>
+<thead>
+<th>Line</th>
+<th>Known Bindings</th>
+</thead>
+<tbody>
+<tr>
+<td/>
+<td/>
+<td/>
+<td/>
+<td class="missing">&#10008;</td>
+</tr>
+<tr>
+<td>1</td>
+<td>a = 2</td>
+<td class="found">&checkmark;</td>
+<td/>
+<td>&#8593;<sup>c?</sup></td>
+</tr>
+<tr>
+<td>2</td>
+<td>b = 4</td>
+<td>&#8593;<sup>a?</sup></td>
+<td class="found">&checkmark;</td>
+<td>&#8593;<sup>c?</sup></td>
+</tr>
+<tr>
+<td>3</td>
+<td></td>
+<td>&#8593;<sup>a?</sup></td>
+<td>&#8593;<sup>b?</sup></td>
+<td>&#8593;<sup>c?</sup></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>
+In this example, one can see that the value bound to <code>c</code> is not
+found in the trace table. As such, the expression on Line 3
+(<code>a * 2 + b * c</code>) cannot be evaluated.
+</p>
+
+<p>
+An error of this sort is often identified as the use of an undeclared (or
+undefined) identifier (i.e., <code>c</code> has not been assigned to).
+But this mistake could just as easily be due to mistyping an identifer name
+when writing the expression. The Python interpreter cannot determine intent
+(though recent versions attempt to identify misspellings with suggestions
+in such cases) so the default error reported is that the identifier is
+undefined.
+</p>
+
+   <h3>Sequential Flow</h3>
+
+<p>The following code is very similar to that in the previous example. In
+fact, it fails for the same reason: <code>c</code> is undefined. This is
+often surprising because <code>c</code> is assigned to on Line 4. Recall
+that a sequence of statements is evaluated from top to bottom. As such,
+the expression on Line 3 (<code>a * 2 + b * c</code>) will result in an
+error before Line 4 is even to be considered.
+</p>
+
+<div class="trace">
+<blockquote class="code">
+<ul>
+<li><span class="code_gutter">1</span><span class="code_line">a = 2</span></li>
+<li><span class="code_gutter">2</span><span class="code_line">b = 4</span></li>
+<li><span class="code_gutter">3</span><span class="code_line">result = a * 2 + b * c</span></li>
+<li><span class="code_gutter">4</span><span class="code_line">c = 10</span></li>
+</ul>
+</blockquote>
+<table>
+<caption>Initial Code</caption>
+<thead>
+<th>Line</th>
+<th>Known Bindings</th>
+</thead>
+<tbody>
+<tr>
+<td/>
+<td/>
+<td/>
+<td/>
+<td class="missing">&#10008;</td>
+</tr>
+<tr>
+<td>1</td>
+<td>a = 2</td>
+<td class="found">&checkmark;</td>
+<td/>
+<td>&#8593;<sup>c?</sup></td>
+</tr>
+<tr>
+<td>2</td>
+<td>b = 4</td>
+<td>&#8593;<sup>a?</sup></td>
+<td class="found">&checkmark;</td>
+<td>&#8593;<sup>c?</sup></td>
+</tr>
+<tr>
+<td>3</td>
+<td></td>
+<td>&#8593;<sup>a?</sup></td>
+<td>&#8593;<sup>b?</sup></td>
+<td>&#8593;<sup>c?</sup></td>
+</tr>
+<tr>
+<td>4</td>
+<td class="missing">not evaluated</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+   <h3>Changing a Binding</h3>
+
+<p>The example below illustrates a very common misconception that is entirely
+reasonable if one views assignment from a different perspective. This example
+is used to reinforce the mental model of evaluation that we are building, not
+to explore an alternative perspective.
+</p>
+
+<div class="trace">
+<blockquote class="code">
+<ul>
+<li><span class="code_gutter">1</span><span class="code_line">a = 2</span></li>
+<li><span class="code_gutter">2</span><span class="code_line">b = 10 * a</span></li>
+<li><span class="code_gutter">3</span><span class="code_line">a = 3</span></li>
+<li><span class="code_gutter">4</span><span class="code_line">result = b + 1</span></li>
 </ul>
 </blockquote>
 <table>
@@ -565,17 +709,187 @@ and 2.
 <td>3</td>
 <td></td>
 </tr>
+<tr>
+<td>4</td>
+<td></td>
+</tr>
 </tbody>
 </table>
 </div>
 
-   <h3>Later Binding</h3>
+<p>Evaluation of Line 1 and Line 2 proceed as one expects from the previous
+examples. Line 1 binds <code>2</code> to <code>a</code> and Line 2 creates
+a binding based on this binding for <code>a</code>.
+</p>
 
-   <h3>Changing a Binding</h3>
+<div class="trace">
+<blockquote class="code">
+<ul>
+<li><span class="code_gutter">1</span><span class="code_line">a = 2</span></li>
+<li><span class="code_gutter">2</span><span class="code_line">b = 10 * a</span></li>
+<li><span class="code_gutter">3</span><span class="code_line">a = 3</span></li>
+<li><span class="code_gutter">4</span><span class="code_line">result = b + 1</span></li>
+</ul>
+</blockquote>
+<table>
+<caption>Initial Code</caption>
+<thead>
+<th>Line</th>
+<th>Known Bindings</th>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>a = 2</td>
+<td class="found">&checkmark;</td>
+</tr>
+<tr>
+<td>2</td>
+<td>b = 20</td>
+<td>&#8593;<sup>a?</sup></td>
+</tr>
+<tr>
+<td>3</td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>Note carefully that <code>b</code> is bound to the <em>value</em> of
+the expression <code>10 * a</code> when Line 2 is evaluated. At this
+point in the overall evaluation, we can see from the trace table that
+<code>a</code> is bound to <code>2</code>. As such, the <em>value</em>
+bound to <code>b</code> is <code>20</code> (the result of <code>10 * a</code>
+where <code>a</code> is <code>2</code>).
+</p>
+
+<p>
+Evaluation continues on Line 3 with a reassignment to <code>a</code>. To
+be clear, such reassignment is common in some programming styles (though
+not terribly useful in this example) but does increase the complexity of
+reasoning about code.
+</p>
+
+<div class="trace">
+<blockquote class="code">
+<ul>
+<li><span class="code_gutter">1</span><span class="code_line">a = 2</span></li>
+<li><span class="code_gutter">2</span><span class="code_line">b = 10 * a</span></li>
+<li><span class="code_gutter">3</span><span class="code_line">a = 3</span></li>
+<li><span class="code_gutter">4</span><span class="code_line">result = b + 1</span></li>
+</ul>
+</blockquote>
+<table>
+<caption>Initial Code</caption>
+<thead>
+<th>Line</th>
+<th>Known Bindings</th>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>a = 2</td>
+<td class="found">&checkmark;</td>
+</tr>
+<tr>
+<td>2</td>
+<td>b = 20</td>
+<td>&#8593;<sup>a?</sup></td>
+</tr>
+<tr>
+<td>3</td>
+<td>a = 3</td>
+</tr>
+<tr>
+<td>4</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>
+Evaluation of Line 4 requires that we determine the value bound to
+<code>b</code> as illustrated below. 
+</p>
+
+<div class="trace">
+<blockquote class="code">
+<ul>
+<li><span class="code_gutter">1</span><span class="code_line">a = 2</span></li>
+<li><span class="code_gutter">2</span><span class="code_line">b = 10 * a</span></li>
+<li><span class="code_gutter">3</span><span class="code_line">a = 3</span></li>
+<li><span class="code_gutter">4</span><span class="code_line">result = b + 1</span></li>
+</ul>
+</blockquote>
+<table>
+<caption>Initial Code</caption>
+<thead>
+<th>Line</th>
+<th>Known Bindings</th>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>a = 2</td>
+<td class="found">&checkmark;</td>
+</tr>
+<tr>
+<td>2</td>
+<td>b = 20</td>
+<td>&#8593;<sup>a?</sup></td>
+<td class="found">&checkmark;</td>
+</tr>
+<tr>
+<td>3</td>
+<td>a = 3</td>
+<td/>
+<td>&#8593;<sup>b?</sup></td>
+</tr>
+<tr>
+<td>4</td>
+<td>result = 21</td>
+<td/>
+<td>&#8593;<sup>b?</sup></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>If you think that each of these steps is clear, or at least consistent
+with the mental model presented in this chapter, then that is wonderful.
+</p>
+<p>
+You may then be wondering what the misconception is.  It is not uncommon
+to believe that the value of <code>b</code> remains based on the value of
+<code>a</code>, so that when <code>a</code> changes on Line 3, then
+the value of <code>b</code> should change. It does not.
+</p>
+
+<p>An assignment creates a binding between an identifier and a value
+that results from evaluating the assignment's expression immediately.
+Changing this binding requires assigning to the same identifier.
+</p>
+
+<h2>Summary</h2>
+
+<p>
+A sequence of statements (assignments in this chapter) is evaluated from
+top to bottom in order. We use trace tables to track the introduction (and
+modification) of bindings to identifiers as we trace the evaluation of
+such statements. Doing so aids in building our mental model of evaluation.
+</p>
 
 </body>
 
+
 <footer>
+<hr/>
 <p id="footnote-1">1. There are cases where one might trace code in a
    more general/abstract manner (such as when developing test cases,
    when debugging, when reading function definition in isolation, or

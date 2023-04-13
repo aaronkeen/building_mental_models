@@ -71,3 +71,13 @@ div.trace td
 {
    padding-left: 1em;
 }
+
+.found
+{
+   color: #00b400;
+}
+
+.missing
+{
+   color: #b40000;
+}
