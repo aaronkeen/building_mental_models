@@ -3,7 +3,7 @@
 <head>
    <meta charset="utf-8"/>
    <title>Building Mental Models - Tracing Statement Sequences</title>
-   <link media="screen" type="text/css" href="../css/mental.css" rel="StyleSheet"/>
+   <link media="screen" type="text/css" href="../../css/mental.css" rel="StyleSheet"/>
 </head>
 
 <body>
@@ -89,18 +89,18 @@ statement now numbered for reference).
 as <code>x2 - x1</code>) that include the use of identifiers. Furthermore,
 the later lines of code rely on the evaluation of the earlier lines of code
 to determine the values associated with the identifers used. More specifically,
-the evaluation of the expression in the assignment statement on line 7
+the evaluation of the expression in the assignment statement on Line 7
 (i.e., the expression <code>delta_x*delta_x + delta_y*delta_y</code>)
 requires that the values associated with identifiers <code>delta_x</code> and
 <code>delta_y</code> be
-known; these identifiers are assigned values on lines 5 and 6.
+known; these identifiers are assigned values on Lines 5 and 6.
 </p>
 
    <h3>Sequencing</h3>
 <p>
    Evaluation of a sequence of statements begins at the first and continues
 through the last. In the example above, the assignment statement on line
-1 will evaluate before that on line 2, which evaluates before line 3, and
+1 will evaluate before that on Line 2, which evaluates before Line 3, and
 so on. This "flow of control" from the first statement (top) to the last
 statement (bottom) is important to the proper evaluation of a sequence of
 statements (i.e., evaluation proceeds from top to bottom or from first to

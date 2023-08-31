@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+   <meta charset="utf-8"/>
+   <title>Building Mental Models - Tracing Functions</title>
+   <link media="screen" type="text/css" href="../../css/mental.css" rel="StyleSheet"/>
+</head>
+
+<body>
+   <h1>Tracing Functions</h1>
+
+   <h2>Functions</h2>
+   <h3>What is a function?</h3>
+<p>
+You may recall the concept of a function from your study of mathematics. A function such as <code>f(x) = x<sup>2</sup></code> indicates that for any (numeric) value used for <code>x</code>, the result of the function can be determined by calculating <code>x<sup>2</sup></code>. This creates a mapping of input values (i.e., each value used for <code>x</code>) and results (or output values; the result of calculating <code>x<sup>2</sup></code>). It is common to present such a mapping (or a portion of it) as a <a href="https://www.google.com/search?q=graph+f%28x%29%3Dx%5E2" target="_blank" rel="noopener noreferrer">graph</a> to aid in reasoning about the "behavior" of a function (i.e., to visualize this mapping or inputs to outputs).
+</p>
+
+
+   <h3>Why use functions when programming?</h3>
+<p>
+The previous presentation on tracing explored the evaluation of a sequence of code (a sequence of statements). Though the examples were introductory, they provided a foundation for reasoning about programs on which to build.  A sequence of statements is commonly used in Python (and in many other programming languages) to "build" a complex computation from smaller computations. This is illustrated
+in the example copied below from the introduction to tracing.
+</p>
+
+<blockquote class="code">
+<ul>
+<li><span class="code_gutter">1</span><span class="code_line">x1 = 2</span></li>
+<li><span class="code_gutter">2</span><span class="code_line">y1 = 4</span></li>
+<li><span class="code_gutter">3</span><span class="code_line">x2 = 10</span></li>
+<li><span class="code_gutter">4</span><span class="code_line">y2 = 7</span></li>
+<li><span class="code_gutter">5</span><span class="code_line">delta_x = x2 - x1</span></li>
+<li><span class="code_gutter">6</span><span class="code_line">delta_y = y2 - y1</span></li>
+<li><span class="code_gutter">7</span><span class="code_line">distance_squared = delta_x*delta_x + delta_y*delta_y</span></li>
+</ul>
+</blockquote>
+
+<p>
+This example, as you may recall, computes the square of the (<a href="https://en.wikipedia.org/wiki/Euclidean_distance" target="_blank" rel="noopener noreferrer">Euclidean</a>) distance between two points (as represented by <code>x1, y1</code>, and <code>x2, y2</code>)<sup><a id="footnote-1-home" href="#footnote-1">1</a></sup>. 
+</p>
+
+<p>
+This particular example, however, has two shortcomings. First, the values for the coordinates of each point are fixed in the code itself (i.e., <code>x1</code> is fixed at <code>2</code>, <code>y1</code> is fixed at <code>4</code>, and so on). Second, if we wanted to do a similar computation with different values, then we would need to repeat this same code. Imagine writing a program to compute the distance to travel on a route between two cities; doing so might require many copies of this same code (and, in fact, may require an indeterminate number of copies if the program allowed the user to select the routes).
+</p>
+
+<p>
+Functions are used in programming for a variety of purposes, but, to meet our objectives, the primary use is to give a name (and ... see below) to a complex computation that we may want to use multiple times (such as the computation of the distance between two points, or the computation that decodes a video stream for playback in a web browser). In the mathematics example of <code>f(x) = x<sup>2</sup></code>, the name <code>f</code> is given to the computation (of <code>x<sup>2</sup></code>).
+</p>
+
+<p>
+Of course, to really make that computation reusable, the function must allow each use to indicate the values to be used for some identifiers. In the mathematics example, this is the role of identifier <code>x</code>; it allows <code>f(3)</code> to compute <code>3<sup>2</sup></code> and <code>f(-7)</code> to compute <code>-7<sup>2</sup></code>. In a function for the example code above, we might, for instance, want to allow <code>x1</code>, <code>y1</code>, <code>x2</code>, and <code>y2</code> to take on different values for each use.
+</p>
+
+
+   <h2>Anatomy of a Function</h2>
+<p>
+Though we will return to the distance (squared) example later, let us begin with the following shorter sequence.
+</p>
+<blockquote class="code">
+<ul>
+<li><span class="code_gutter">1</span><span class="code_line">x = 2</span></li>
+<li><span class="code_gutter">2</span><span class="code_line">result = x * x + 1</span></li>
+</ul>
+</blockquote>
+
+<p>
+Using the trace table process allows one to determine that the evaluation of this sequence of statements will lead to setting <code>result</code> to the value <code>5</code>.
+</p>
+
+<div class="trace">
+<blockquote class="code">
+<br/>
+<ul>
+<li><span class="code_gutter">1</span><span class="code_line">x = 2</span></li>
+<li><span class="code_gutter">2</span><span class="code_line">result = x * x + 1</span></li>
+</ul>
+</blockquote>
+<table>
+<caption>Initial Code</caption>
+<thead>
+<th>Line</th>
+<th>Known Bindings</th>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>x = 2</td>
+<td class="found">&checkmark;</td>
+<td class="found">&checkmark;</td>
+</tr>
+<tr>
+<td>2</td>
+<td>result = 5</td>
+<td>&#8593;<sup>x?</sup></td>
+<td>&#8593;<sup>x?</sup></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>
+Perhaps we want to reuse this code multiple times; to do so we can turn it into a function. To do so, pick a name and then indicate to the Python interpreter that a function is being defined.
+</p>
+
+</p>
+<blockquote class="code">
+<ul>
+<li><span class="code_gutter">1</span><span class="code_line">def square_add_one():</span></li>
+<li><span class="code_gutter">2</span><span class="code_line">&nbsp;&nbsp;&nbsp;&nbsp;x = 2</span></li>
+<li><span class="code_gutter">3</span><span class="code_line">&nbsp;&nbsp;&nbsp;&nbsp;result = x * x + 1</span></li>
+<li><span class="code_gutter">4</span><span class="code_line">&nbsp;&nbsp;&nbsp;&nbsp;return result</span></li>
+</ul>
+</blockquote>
+
+<p>
+In this example, Lines 1 and 4 are new; Lines 2 and 3 are the same code that we started with, but indented.
+</p>
+
+<p>Line 1 (not indented) begins with the keyword <code>def</code> to indicate that a function is being defined (think of this as <u><code>def</code></u>ine). The name of the function (in this case, the identifier <code>square_add_one</code>) is specified after <code>def</code>; following the name is a required pair of parentheses (we will come back to these) and a colon to indicate that the computation for the function will follow. That computation (on Lines 2 and 3 in this example) must be indented (four spaces is the Python standard recommendation).
+</p>
+
+<p>
+Line 4 is a bit peculiar and has no analog in the mathematics example <code>f(x) = x<sup>2</sup></code>. When <code>f(3)</code> is computed, the resulting value is the result of <code>3<sup>2</sup></code> (or <code>9</code>). But functions in Python can grow quite complicated, so you (as the programmer) must explicitly indicate the resulting value for a given function using the <code>return</code> statement. In this function, the resulting value of the function is the value of the identifier <code>result</code><sup><a id="footnote-2-home" href="#footnote-2">2</a></sup>. 
+
+</p>
+
+   <h3>Common Misconceptions about Return</h3>
+<p>
+</p>
+
+   <h2>Tracing a Call of a Function</h2>
+<p>
+</p>
+
+
+   <h2>Tracing Code that Calls a Function</h2>
+<p>
+</p>
+
+
+<h2>Summary</h2>
+
+<p>
+...
+</p>
+
+</body>
+
+
+<footer>
+<hr/>
+<p id="footnote-1">1.
+Once we discuss how to compute the square root of a
+number, then we can modify this code to compute the Euclidean distance.
+   <a href="#footnote-1-home" title="return to text">&#8617;</a>
+</p>
+<p id="footnote-2">2.
+This identifier name was selected to indicate its purpose; the name <code>result</code> is not required.
+   <a href="#footnote-2-home" title="return to text">&#8617;</a>
+</p>
+</footer>
+</html>
